@@ -2,11 +2,11 @@ import { AnimatePresence, animate, motion, useMotionValue, useTransform } from '
 import { useEffect, useState } from 'react'
 import { BOOT_LOG, PROFILE } from '@/content/site'
 
-const PROGRESS_MS = 2050
-const CARD_EXIT_MS = 1950
-const TOTAL_MS = 2960
-const NAME_START = 2.15
-const CHAR_STEP = 0.045
+const PROGRESS_MS = 1000
+const CARD_EXIT_MS = 940
+const TOTAL_MS = 1520
+const NAME_START = 1.04
+const CHAR_STEP = 0.024
 const EASE = [0.16, 1, 0.3, 1] as const
 
 const FIRST = 'ADARSH'
@@ -15,9 +15,9 @@ const LAST = 'SHANBHAG'
 function NameChar({ char, delay, className }: { char: string; delay: number; className: string }) {
   return (
     <motion.span
-      initial={{ opacity: 0, y: 56, rotate: 7 }}
+      initial={{ opacity: 0, y: 40, rotate: 6 }}
       animate={{ opacity: 1, y: 0, rotate: 0 }}
-      transition={{ duration: 0.62, delay, ease: EASE }}
+      transition={{ duration: 0.38, delay, ease: EASE }}
       className={className}
     >
       {char}
@@ -61,7 +61,7 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
         <motion.div
           initial={{ clipPath: 'inset(0 0 0 0)' }}
           exit={{ clipPath: 'inset(0 0 100% 0)' }}
-          transition={{ duration: 0.56, ease: [0.7, 0, 0.2, 1] }}
+          transition={{ duration: 0.34, ease: [0.7, 0, 0.2, 1] }}
           onClick={() => setVisible(false)}
           role="presentation"
           className="fixed inset-0 z-[95] flex cursor-pointer items-center justify-center overflow-hidden bg-[rgb(7_8_12/0.94)] p-6 backdrop-blur-lg"
@@ -73,7 +73,7 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
                 ? { opacity: 0, y: -18, scale: 0.94 }
                 : { opacity: 1, filter: 'blur(0px)', y: 0, scale: 1 }
             }
-            transition={{ duration: cardGone ? 0.5 : 0.8, ease: cardGone ? [0.6, 0, 0.2, 1] : EASE }}
+            transition={{ duration: cardGone ? 0.28 : 0.42, ease: cardGone ? [0.6, 0, 0.2, 1] : EASE }}
             className="w-[min(520px,100%)] rounded-[18px] border border-[rgb(255_255_255/0.1)] bg-linear-to-b from-[rgb(255_255_255/0.06)] to-[rgb(255_255_255/0.02)] px-6 pt-6 pb-5 text-[#e9ecf5] shadow-[0_0_0_1px_rgb(255_255_255/0.06),0_24px_60px_-20px_rgb(0_0_0/0.75)]"
           >
             <div className="flex items-center gap-2.5">
@@ -106,7 +106,7 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
                   key={line}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.2 + i * 0.28 }}
+                  transition={{ duration: 0.22, delay: 0.08 + i * 0.125 }}
                 >
                   {line}
                   <span className="text-[#4be3c1]"> {status}</span>
@@ -143,9 +143,9 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
               </div>
             </div>
             <motion.div
-              initial={{ opacity: 0, y: 56 }}
+              initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 2.78, ease: EASE }}
+              transition={{ duration: 0.34, delay: 1.38, ease: EASE }}
               className="font-mono text-[clamp(9px,1.2vw,12px)] tracking-[0.3em] text-[rgb(233_236_245/0.5)]"
             >
               BACKEND · DISTRIBUTED SYSTEMS · FINTECH

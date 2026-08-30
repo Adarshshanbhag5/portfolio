@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 import { BrandIcon } from '@/components/BrandIcon'
 import { SectionHeading } from '@/components/SectionHeading'
 import { useCanvasScene } from '@/hooks/useCanvasScene'
-import { reveal, rise, riseSmall } from '@/lib/motion'
+import { dealIn, grid, reveal, riseSmall } from '@/lib/motion'
 import { kafkaScene } from '@/scenes/kafka'
 import { kubernetesScene } from '@/scenes/kubernetes'
 import { latencyScene } from '@/scenes/latency'
@@ -23,6 +23,8 @@ const TONE_CLASS: Record<Tone, string> = {
 }
 
 interface SystemCardProps<State> {
+  /** Position in the grid; picks the edge the card arrives from. */
+  order: number
   /** Key the scene emits its readout under. */
   readoutKey: string
   initialReadout: string
@@ -38,6 +40,7 @@ interface SystemCardProps<State> {
 }
 
 function SystemCard<State>({
+  order,
   readoutKey,
   initialReadout,
   scene,
@@ -54,8 +57,9 @@ function SystemCard<State>({
 
   return (
     <motion.article
-      {...reveal(rise)}
-      className="rounded-[20px] border border-line bg-linear-to-b from-[color-mix(in_srgb,var(--pf-txt)_5%,transparent)] to-[color-mix(in_srgb,var(--pf-txt)_1.5%,transparent)] p-5 backdrop-blur-[18px] transition-[border-color,transform] duration-300 hover:-translate-y-[3px] hover:border-line-2"
+      variants={dealIn}
+      custom={order}
+      className="rounded-[20px] border border-line bg-linear-to-b from-[color-mix(in_srgb,var(--pf-txt)_5%,transparent)] to-[color-mix(in_srgb,var(--pf-txt)_1.5%,transparent)] p-5 backdrop-blur-[18px] transition-[border-color,transform] duration-200 hover:-translate-y-[3px] hover:border-line-2"
     >
       <div className="flex items-center gap-2.25">
         {logo && <BrandIcon slug={logo.slug} mono={logo.mono} className="h-4" />}
@@ -96,8 +100,12 @@ export function Systems() {
         }
       />
 
-      <div className="mt-[clamp(30px,4.5vw,50px)] grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))]">
+      <motion.div
+        {...reveal(grid())}
+        className="mt-[clamp(30px,4.5vw,50px)] grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))]"
+      >
         <SystemCard
+          order={0}
           scene={kafkaScene}
           readoutKey="lag"
           labelTone="a1"
@@ -112,6 +120,7 @@ export function Systems() {
         </SystemCard>
 
         <SystemCard
+          order={1}
           scene={queueScene}
           readoutKey="depth"
           labelTone="a2"
@@ -126,6 +135,7 @@ export function Systems() {
         </SystemCard>
 
         <SystemCard
+          order={2}
           scene={kubernetesScene}
           readoutKey="pods"
           labelTone="a1"
@@ -135,11 +145,12 @@ export function Systems() {
           logo={{ slug: 'kubernetes' }}
           title="Scheduling & self-healing"
         >
-          Desired state versus actual. Pods get scheduled, die, and get rescheduled — the deploy
+          Desired state versus actual. Pods get scheduled, die, and get rescheduled. The deploy
           shouldn't wake anyone up.
         </SystemCard>
 
         <SystemCard
+          order={3}
           scene={workflowScene}
           readoutKey="state"
           labelTone="a2"
@@ -149,16 +160,17 @@ export function Systems() {
           logo={{ slug: 'temporal', mono: true }}
           title="Durable orchestration"
         >
-          Long-running flows that survive restarts. When a vendor 500s, the activity retries — the
-          workflow doesn't lose its place.
+          Long-running flows that survive restarts. When a vendor 500s, the activity retries and
+          the workflow doesn't lose its place.
         </SystemCard>
 
         <SystemCard
+          order={4}
           scene={orderBookScene}
           readoutKey="spread"
           labelTone="a3"
           readoutTone="muted"
-          initialReadout="spread —"
+          initialReadout="spread 0.00"
           label="FIX · ORDER BOOK"
           title="Order flow & execution"
         >
@@ -167,11 +179,12 @@ export function Systems() {
         </SystemCard>
 
         <SystemCard
+          order={5}
           scene={latencyScene}
           readoutKey="p99"
           labelTone="a1"
           readoutTone="a2"
-          initialReadout="p99 —"
+          initialReadout="p99 0ms"
           label="LATENCY · PGBOUNCER"
           logo={{ slug: 'postgresql' }}
           title="Query paths & caching"
@@ -179,7 +192,7 @@ export function Systems() {
           Bulk upserts in the millions, indexes that earn their keep, and a cache in front so the
           client never waits on the DB.
         </SystemCard>
-      </div>
+      </motion.div>
     </section>
   )
 }

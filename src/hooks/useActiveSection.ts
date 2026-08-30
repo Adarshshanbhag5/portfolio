@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 const ACTIVATION_LINE = 0.4
 
 /**
- * The last section whose top has crossed the activation line — the reading
+ * The last section whose top has crossed the activation line, which is the reading
  * position, rather than whichever section happens to be largest on screen.
  */
 export function useActiveSection(ids: readonly string[]) {

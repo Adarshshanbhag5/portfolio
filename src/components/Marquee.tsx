@@ -4,7 +4,7 @@ import { MARQUEE_ROWS } from '@/content/marquee'
 import type { MarqueeItem } from '@/content/marquee'
 import { cn } from '@/lib/cn'
 
-const DURATIONS = ['42s', '56s'] as const
+const DURATIONS = ['32s', '42s'] as const
 
 function Track({ items }: { items: readonly MarqueeItem[] }) {
   return (

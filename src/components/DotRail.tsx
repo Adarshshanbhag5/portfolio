@@ -28,7 +28,7 @@ export function DotRail({ active }: DotRailProps) {
             <span className="font-mono text-[9.5px] tracking-[0.14em]">{index}</span>
             <span
               className={cn(
-                'rounded-full bg-current transition-all duration-250',
+                'rounded-full bg-current transition-all duration-200',
                 current ? 'size-2.75 shadow-[0_0_12px_currentColor]' : 'size-1.75',
               )}
             />

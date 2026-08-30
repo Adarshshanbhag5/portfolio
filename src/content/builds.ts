@@ -1,5 +1,3 @@
-import { PROFILE } from '@/content/site'
-
 export interface Build {
   name: string
   kicker: string
@@ -15,7 +13,7 @@ export const BUILDS: Build[] = [
     summary:
       "Exposes Android's Color Palette API to React Native so apps can theme themselves from artwork at runtime.",
     stack: ['React Native', 'Java', 'Android'],
-    href: PROFILE.github.href,
+    href: 'https://github.com/Adarshshanbhag5/react-native-palette-picker',
   },
   {
     name: 'MusicFumes',
@@ -23,6 +21,6 @@ export const BUILDS: Build[] = [
     summary:
       'An offline music player for large local media libraries, with custom Java native modules for file access and playback.',
     stack: ['React Native', 'TypeScript', 'Zustand'],
-    href: PROFILE.github.href,
+    href: 'https://github.com/Adarshshanbhag5/musicFumes',
   },
 ]

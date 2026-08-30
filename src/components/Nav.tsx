@@ -12,7 +12,8 @@ interface NavProps {
 export function Nav({ active }: NavProps) {
   const { theme, toggleTheme } = useTheme()
   const { chaos } = useEasterEggs()
-  const onBrandClick = useMultiClick(3, 900, chaos)
+  // 900ms punished anyone who did not machine-gun the clicks.
+  const onBrandClick = useMultiClick(3, 1200, chaos)
 
   return (
     <nav
@@ -32,7 +33,7 @@ export function Nav({ active }: NavProps) {
       </a>
 
       {/* `justify-end` would push the overflow off the *start* edge, where it is
-          unreachable — no scroll goes negative. An auto start-margin on the first
+          unreachable, since no scroll goes negative. An auto start-margin on the first
           link right-aligns the row when it fits and collapses when it does not,
           so every link stays scrollable on a narrow phone. */}
       <div className="flex min-w-0 flex-auto items-center gap-[clamp(10px,1.5vw,22px)] overflow-x-auto [scrollbar-width:none]">
@@ -58,7 +59,7 @@ export function Nav({ active }: NavProps) {
           const rect = event.currentTarget.getBoundingClientRect()
           toggleTheme({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 })
         }}
-        className="grid size-8 flex-none place-items-center rounded-full border border-line bg-panel font-mono text-xs text-ink transition-[background-color,border-color,rotate] duration-700 hover:border-line-2 hover:bg-panel-2"
+        className="grid size-8 flex-none place-items-center rounded-full border border-line bg-panel font-mono text-xs text-ink transition-[background-color,border-color,rotate] duration-500 hover:border-line-2 hover:bg-panel-2"
         style={{ rotate: theme === 'dark' ? '0deg' : '360deg' }}
       >
         {theme === 'dark' ? '◐' : '◑'}

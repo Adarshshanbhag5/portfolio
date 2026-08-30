@@ -4,20 +4,21 @@ import { Chip } from '@/components/Chip'
 import { SectionHeading } from '@/components/SectionHeading'
 import { ROLES } from '@/content/experience'
 import type { Role } from '@/content/experience'
-import { reveal, rise } from '@/lib/motion'
+import { EDGE, dealIn, grid, reveal } from '@/lib/motion'
 import { cn } from '@/lib/cn'
 
 function RoleCard({ role }: { role: Role }) {
   return (
     <motion.article
-      {...reveal(rise)}
+      variants={dealIn}
+      custom={EDGE.left}
       className="relative pl-[clamp(30px,4vw,46px)]"
     >
       <span className="absolute top-6.5 left-0 size-4 rounded-full border-2 border-a1 bg-bg shadow-[0_0_16px_rgb(124_156_255/0.7)]">
         <span className="animate-pulse-dot absolute inset-[3px] rounded-full bg-a1" />
       </span>
 
-      <div className="relative overflow-hidden rounded-[20px] border border-line bg-linear-to-b/srgb from-[color-mix(in_srgb,var(--pf-txt)_5.5%,transparent)] to-[color-mix(in_srgb,var(--pf-txt)_2%,transparent)] p-[clamp(20px,3vw,30px)] backdrop-blur-[18px] transition-[border-color,transform] duration-300 hover:-translate-y-[3px] hover:border-line-2">
+      <div className="relative overflow-hidden rounded-[20px] border border-line bg-linear-to-b/srgb from-[color-mix(in_srgb,var(--pf-txt)_5.5%,transparent)] to-[color-mix(in_srgb,var(--pf-txt)_2%,transparent)] p-[clamp(20px,3vw,30px)] backdrop-blur-[18px] transition-[border-color,transform] duration-200 hover:-translate-y-[3px] hover:border-line-2">
         <div className="animate-beam absolute top-0 left-0 h-px w-[34%] bg-linear-to-r/srgb from-transparent via-a1 to-transparent" />
 
         <div className="flex flex-wrap items-baseline gap-x-3.5 gap-y-2.5">
@@ -76,8 +77,9 @@ export function Work() {
     >
       <SectionHeading index="01" label="WORK" title="Where I've built." />
 
-      <div
+      <motion.div
         ref={timelineRef}
+        {...reveal(grid(0.12))}
         className="relative mt-[clamp(34px,5vw,56px)] flex flex-col gap-5"
       >
         <div className="absolute top-2.5 bottom-2.5 left-[7px] w-0.5 rounded-full bg-line">
@@ -93,7 +95,7 @@ export function Work() {
         {ROLES.map((role) => (
           <RoleCard key={role.company} role={role} />
         ))}
-      </div>
+      </motion.div>
     </section>
   )
 }

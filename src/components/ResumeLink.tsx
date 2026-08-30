@@ -8,14 +8,28 @@ interface ResumeLinkProps {
   className?: string
 }
 
-/** Opens the PDF for real, and plays the transfer overlay over the page. */
+/**
+ * Plays the transfer overlay first, then opens the real PDF. The tab opens
+ * around a second after the click, well inside the browser's transient
+ * activation window, so it is not treated as an unsolicited popup.
+ */
 export function ResumeLink({ children, className }: ResumeLinkProps) {
   const { play } = useDownloadOverlay()
   const burst = useBurstOnClick()
 
-  const onClick = (event: MouseEvent) => {
+  const onClick = async (event: MouseEvent<HTMLAnchorElement>) => {
+    // Let modified clicks behave normally: new tab, download, saved bookmark.
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+
+    event.preventDefault()
     burst(event)
-    play()
+    await play()
+
+    // `noopener` in the feature string forces a null return, which would make
+    // the blocked-popup check unusable; sever the link afterwards instead.
+    const opened = window.open(PROFILE.resume, '_blank')
+    if (opened) opened.opener = null
+    else window.location.href = PROFILE.resume
   }
 
   return (

@@ -2,7 +2,7 @@ import { useMotionValue, useReducedMotion, useSpring } from 'motion/react'
 import { useCallback } from 'react'
 import type { MouseEvent } from 'react'
 
-const SPRING = { stiffness: 180, damping: 22, mass: 0.4 }
+const SPRING = { stiffness: 280, damping: 26, mass: 0.35 }
 
 /**
  * Nudges a target toward the pointer as it crosses a container. Spread
