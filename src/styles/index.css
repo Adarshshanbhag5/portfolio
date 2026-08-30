@@ -1,0 +1,43 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------
+   Design tokens — placeholders, replaced during the design handover.
+   Everything declared here becomes a Tailwind utility
+   (e.g. --color-ink → text-ink / bg-ink).
+   --------------------------------------------------------------- */
+@theme {
+  --font-sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --color-canvas: #ffffff;
+  --color-ink: #0a0a0a;
+}
+
+@layer base {
+  :root {
+    color-scheme: light dark;
+  }
+
+  body {
+    min-height: 100dvh;
+    font-family: var(--font-sans);
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #root {
+    isolation: isolate;
+  }
+
+  /* Honour the OS "reduce motion" setting for every animation. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
