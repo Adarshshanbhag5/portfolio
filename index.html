@@ -1,11 +1,38 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Adarsh Shanbhag</title>
-    <meta name="description" content="Personal portfolio." />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#07080c" />
+
+    <title>Adarsh Shanbhag — Backend Engineer</title>
+    <meta
+      name="description"
+      content="Backend engineer in Bengaluru building distributed systems for financial platforms — market data, order flow and event-driven workflows in TypeScript and Go."
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Adarsh Shanbhag — Backend Engineer" />
+    <meta
+      property="og:description"
+      content="Backend engineer in Bengaluru building distributed systems for financial platforms."
+    />
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="preconnect" href="https://cdn.simpleicons.org" crossorigin />
+
+    <script>
+      // Apply the stored theme before first paint so a returning visitor on the
+      // light theme never sees a frame of the dark one.
+      try {
+        var stored = localStorage.getItem('pf-theme')
+        if (stored === 'light' || stored === 'dark') document.documentElement.dataset.theme = stored
+      } catch (error) {
+        /* storage blocked — the markup default stands */
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -1,43 +1,228 @@
+@import '@fontsource-variable/space-grotesk';
+@import '@fontsource-variable/jetbrains-mono';
 @import 'tailwindcss';
 
-/* ---------------------------------------------------------------
-   Design tokens — placeholders, replaced during the design handover.
-   Everything declared here becomes a Tailwind utility
-   (e.g. --color-ink → text-ink / bg-ink).
-   --------------------------------------------------------------- */
-@theme {
-  --font-sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+/* ---------------------------------------------------------------------------
+   Palette. Both themes are declared in CSS so a theme switch is one attribute
+   flip on <html> — no per-property JS writes, no flash between them. Canvas
+   scenes read the matching values from lib/theme.ts, since a 2D context cannot
+   consume custom properties.
+   --------------------------------------------------------------------------- */
+:root,
+:root[data-theme='dark'] {
+  --pf-bg: #07080c;
+  --pf-bg2: #0b0d14;
+  --pf-panel: rgb(255 255 255 / 0.045);
+  --pf-panel-2: rgb(255 255 255 / 0.075);
+  --pf-brd: rgb(255 255 255 / 0.1);
+  --pf-brd-2: rgb(255 255 255 / 0.18);
+  --pf-txt: #e9ecf5;
+  --pf-muted: rgb(233 236 245 / 0.6);
+  --pf-faint: rgb(233 236 245 / 0.32);
+  --pf-a1: #7c9cff;
+  --pf-a2: #4be3c1;
+  --pf-a3: #ffb86b;
+  --pf-up: #35d99a;
+  --pf-down: #ff6a6a;
+  --pf-nav: rgb(11 13 20 / 0.62);
+  --pf-vignette: radial-gradient(ellipse at 50% 0%, rgb(7 8 12 / 0) 20%, rgb(7 8 12 / 0.72) 78%);
+}
 
-  --color-canvas: #ffffff;
-  --color-ink: #0a0a0a;
+:root[data-theme='light'] {
+  --pf-bg: #f7f6f3;
+  --pf-bg2: #efeeea;
+  --pf-panel: rgb(18 20 28 / 0.035);
+  --pf-panel-2: rgb(18 20 28 / 0.07);
+  --pf-brd: rgb(18 20 28 / 0.12);
+  --pf-brd-2: rgb(18 20 28 / 0.26);
+  --pf-txt: #13151c;
+  --pf-muted: rgb(19 21 28 / 0.66);
+  --pf-faint: rgb(19 21 28 / 0.42);
+  --pf-a1: #3f57d8;
+  --pf-a2: #0e8e75;
+  --pf-a3: #a9640e;
+  --pf-up: #0f8f5f;
+  --pf-down: #c8372f;
+  --pf-nav: rgb(255 255 255 / 0.68);
+  --pf-vignette: radial-gradient(ellipse at 50% 0%, rgb(247 246 243 / 0) 20%, rgb(247 246 243 / 0.66) 78%);
+}
+
+/* `inline` keeps the utilities pointing at the custom properties instead of
+   baking today's value in, so `bg-bg` follows the theme switch. */
+@theme inline {
+  --font-display: 'Space Grotesk Variable', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+
+  --color-bg: var(--pf-bg);
+  --color-bg-2: var(--pf-bg2);
+  --color-panel: var(--pf-panel);
+  --color-panel-2: var(--pf-panel-2);
+  --color-line: var(--pf-brd);
+  --color-line-2: var(--pf-brd-2);
+  --color-ink: var(--pf-txt);
+  --color-muted: var(--pf-muted);
+  --color-faint: var(--pf-faint);
+  --color-a1: var(--pf-a1);
+  --color-a2: var(--pf-a2);
+  --color-a3: var(--pf-a3);
+  --color-up: var(--pf-up);
+  --color-down: var(--pf-down);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @layer base {
-  :root {
-    color-scheme: light dark;
-  }
-
-  body {
-    min-height: 100dvh;
-    font-family: var(--font-sans);
-    background-color: var(--color-canvas);
-    color: var(--color-ink);
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 92px;
+    background: var(--pf-bg);
+    -webkit-text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
   }
 
-  #root {
-    isolation: isolate;
+  body {
+    overflow-x: hidden;
+    background: var(--pf-bg);
+    color: var(--pf-txt);
+    font-family: var(--font-display);
+    font-size: 16px;
+    line-height: 1.6;
   }
 
-  /* Honour the OS "reduce motion" setting for every animation. */
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-    }
+  h1,
+  h2,
+  h3,
+  h4 {
+    letter-spacing: -0.03em;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--pf-a1) 32%, transparent);
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--pf-bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--pf-txt) 14%, transparent);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--pf-a1);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--pf-a2);
+    outline-offset: 3px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Ambient loops only. Anything with a beginning and an end is driven by Motion
+   so React owns its lifecycle; these run forever and are cheaper left to CSS.
+   --------------------------------------------------------------------------- */
+@utility animate-drift-a {
+  animation: pf-drift-a 26s ease-in-out infinite;
+}
+@utility animate-drift-b {
+  animation: pf-drift-b 32s ease-in-out infinite;
+}
+@utility animate-drift-c {
+  animation: pf-drift-a 38s ease-in-out infinite reverse;
+}
+@utility animate-marquee {
+  animation: pf-marquee var(--marquee-duration, 46s) linear infinite;
+}
+@utility animate-marquee-reverse {
+  animation: pf-marquee-reverse var(--marquee-duration, 46s) linear infinite;
+}
+@utility animate-blink {
+  animation: pf-blink var(--blink-duration, 1.6s) ease-in-out infinite;
+}
+
+@utility animate-pulse-dot {
+  animation: pf-pulse-dot 2.4s ease-in-out infinite;
+}
+@utility animate-beam {
+  animation: pf-beam 5s linear infinite;
+}
+
+@keyframes pf-pulse-dot {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes pf-beam {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(320%);
+  }
+}
+
+@keyframes pf-drift-a {
+  0%,
+  100% {
+    transform: translate3d(-6%, -4%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(8%, 6%, 0) scale(1.16);
+  }
+}
+
+@keyframes pf-drift-b {
+  0%,
+  100% {
+    transform: translate3d(6%, 8%, 0) scale(1.1);
+  }
+  50% {
+    transform: translate3d(-8%, -6%, 0) scale(0.94);
+  }
+}
+
+@keyframes pf-marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes pf-marquee-reverse {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes pf-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
