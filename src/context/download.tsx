@@ -1,4 +1,4 @@
-import { AnimatePresence, animate, motion, useMotionValue, useTransform } from 'motion/react'
+import { AnimatePresence, animate, m, useMotionValue, useTransform } from 'motion/react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { MotionValue } from 'motion/react'
 import type { ReactNode } from 'react'
@@ -32,7 +32,7 @@ function Chunk({ index, progress }: { index: number; progress: MotionValue<numbe
     Math.floor(v * CHUNKS) - 1 === index ? '0 0 12px rgb(124 156 255 / 0.8)' : 'none',
   )
 
-  return <motion.div style={{ background, boxShadow }} className="h-4 flex-1 rounded-[3px]" />
+  return <m.div style={{ background, boxShadow }} className="h-4 flex-1 rounded-[3px]" />
 }
 
 export function DownloadProvider({ children }: { children: ReactNode }) {
@@ -81,7 +81,7 @@ export function DownloadProvider({ children }: { children: ReactNode }) {
       {children}
       <AnimatePresence>
         {open && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -91,7 +91,7 @@ export function DownloadProvider({ children }: { children: ReactNode }) {
             }}
             className="fixed inset-0 z-[94] flex items-center justify-center bg-[rgb(7_8_12/0.74)] p-6 backdrop-blur-md"
           >
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 16, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
@@ -110,15 +110,15 @@ export function DownloadProvider({ children }: { children: ReactNode }) {
               </div>
 
               <div className="mt-3.75 h-1 overflow-hidden rounded-full bg-[rgb(255_255_255/0.09)]">
-                <motion.div
+                <m.div
                   style={{ width }}
                   className="h-full rounded-full bg-linear-to-r from-[#7c9cff] to-[#4be3c1] shadow-[0_0_12px_rgb(124_156_255/0.7)]"
                 />
               </div>
 
               <div className="mt-1.75 flex justify-between text-[10.5px] text-[rgb(233_236_245/0.44)]">
-                <motion.span>{bytes}</motion.span>
-                <motion.span>{rate}</motion.span>
+                <m.span>{bytes}</m.span>
+                <m.span>{rate}</m.span>
               </div>
 
               <div className="mt-3.75 flex gap-1">
@@ -130,7 +130,7 @@ export function DownloadProvider({ children }: { children: ReactNode }) {
               <ul className="mt-3.75 flex min-h-23 flex-col gap-1.5 text-[11px] text-[rgb(233_236_245/0.52)]">
                 <AnimatePresence initial={false}>
                   {log.map((line) => (
-                    <motion.li
+                    <m.li
                       key={line}
                       initial={{ opacity: 0, x: -12 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -138,12 +138,12 @@ export function DownloadProvider({ children }: { children: ReactNode }) {
                       className={line.startsWith('✓') ? 'text-[#4be3c1]' : undefined}
                     >
                       {line}
-                    </motion.li>
+                    </m.li>
                   ))}
                 </AnimatePresence>
               </ul>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
     </DownloadContext>

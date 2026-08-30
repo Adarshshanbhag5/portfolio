@@ -1,4 +1,4 @@
-import { AnimatePresence, animate, motion, useMotionValue, useTransform } from 'motion/react'
+import { AnimatePresence, animate, m, useMotionValue, useTransform } from 'motion/react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { DeployContext } from '@/context/deploy-context'
@@ -45,8 +45,15 @@ export function DeployProvider({ children }: { children: ReactNode }) {
   const [fleet, setFleet] = useState(0)
   const [logs, setLogs] = useState<string[]>([])
   const [settled, setSettled] = useState(false)
-  const [release, setRelease] = useState(42)
+  const [release, setRelease] = useState(41)
   const timers = useRef<number[]>([])
+  /**
+   * A ref, not state: the state flag was captured in this callback's closure,
+   * so a click landing before React re-rendered could start a second timeline
+   * on top of the first. It also keeps `run` stable, which stops every context
+   * consumer re-rendering eight times per rollout.
+   */
+  const running = useRef(false)
 
   const traffic = useMotionValue(0)
   const trafficWidth = useTransform(traffic, (v) => `${v}%`)
@@ -64,14 +71,16 @@ export function DeployProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const run = useCallback(() => {
-    if (open) return
+    if (running.current) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       // Still acknowledge the action, just without the theatre.
       setRelease((v) => v + 1)
       return
     }
 
+    running.current = true
     clearTimers()
+    setRelease((v) => v + 1)
     setOpen(true)
     setStage(0)
     setFleet(0)
@@ -102,9 +111,9 @@ export function DeployProvider({ children }: { children: ReactNode }) {
 
     at(CLOSE_AT, () => {
       setOpen(false)
-      setRelease((v) => v + 1)
+      running.current = false
     })
-  }, [at, burst, clearTimers, open, shake, traffic])
+  }, [at, burst, clearTimers, shake, traffic])
 
   const value = useMemo(() => ({ run }), [run])
 
@@ -113,7 +122,8 @@ export function DeployProvider({ children }: { children: ReactNode }) {
       {children}
       <AnimatePresence>
         {open && (
-          <motion.aside
+          <m.aside
+            key="rollout"
             aria-hidden
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -123,7 +133,7 @@ export function DeployProvider({ children }: { children: ReactNode }) {
           >
             <div className="w-[min(560px,100%)] rounded-2xl border border-line bg-bg-2/95 p-4 font-mono text-[11px] text-ink shadow-[0_24px_60px_-24px_rgb(0_0_0/0.9)] backdrop-blur-xl">
               <header className="flex items-center gap-2.5">
-                <motion.span
+                <m.span
                   animate={{ scale: settled ? 1 : [1, 1.35, 1] }}
                   transition={{ duration: 0.9, repeat: settled ? 0 : Infinity }}
                   className={cn('size-2 rounded-full', settled ? 'bg-up' : 'bg-a3')}
@@ -133,7 +143,7 @@ export function DeployProvider({ children }: { children: ReactNode }) {
                   deploy · v{release} &rarr; prod
                 </span>
                 <span className="ml-auto text-faint">traffic</span>
-                <motion.span className="text-a2">{trafficLabel}</motion.span>
+                <m.span className="text-a2">{trafficLabel}</m.span>
               </header>
 
               <ol className="mt-3.5 flex items-center gap-1.5">
@@ -149,7 +159,7 @@ export function DeployProvider({ children }: { children: ReactNode }) {
                         {name}
                       </span>
                       <span className="mt-1 block h-0.5 overflow-hidden rounded-full bg-line">
-                        <motion.span
+                        <m.span
                           initial={{ scaleX: 0 }}
                           animate={{ scaleX: i <= stage ? 1 : 0 }}
                           transition={{ duration: 0.26, ease: 'easeOut' }}
@@ -170,7 +180,7 @@ export function DeployProvider({ children }: { children: ReactNode }) {
                   {Array.from({ length: FLEET }, (_, i) => {
                     const upgraded = i < fleet
                     return (
-                      <motion.span
+                      <m.span
                         key={i}
                         animate={{
                           scale: upgraded ? [0.7, 1.15, 1] : 1,
@@ -186,7 +196,7 @@ export function DeployProvider({ children }: { children: ReactNode }) {
                   })}
                 </div>
                 <div className="ml-auto h-1.5 w-28 overflow-hidden rounded-full bg-line">
-                  <motion.div
+                  <m.div
                     style={{ width: trafficWidth }}
                     className="h-full rounded-full bg-linear-to-r/srgb from-a1 to-a2"
                   />
@@ -196,7 +206,7 @@ export function DeployProvider({ children }: { children: ReactNode }) {
               <ul className="mt-3.5 flex min-h-16 flex-col justify-end gap-1 text-[10.5px] text-muted">
                 <AnimatePresence initial={false}>
                   {logs.map((line) => (
-                    <motion.li
+                    <m.li
                       key={line}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -205,12 +215,12 @@ export function DeployProvider({ children }: { children: ReactNode }) {
                       className={line.startsWith('promoted') ? 'text-a2' : undefined}
                     >
                       {line.startsWith('promoted') ? '✓' : '↳'} {line}
-                    </motion.li>
+                    </m.li>
                   ))}
                 </AnimatePresence>
               </ul>
             </div>
-          </motion.aside>
+          </m.aside>
         )}
       </AnimatePresence>
     </DeployContext>

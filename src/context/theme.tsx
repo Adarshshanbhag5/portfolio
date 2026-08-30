@@ -1,4 +1,4 @@
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { ThemeContext } from '@/context/theme-context'
@@ -73,7 +73,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       {target && phase !== 'idle' && (
         <div aria-hidden className="pointer-events-none fixed inset-0 z-[89]">
           {Array.from({ length: BANDS }, (_, i) => (
-            <motion.div
+            <m.div
               key={i}
               initial={{ scaleX: 0 }}
               animate={{ scaleX: phase === 'cover' ? 1 : 0 }}
@@ -93,7 +93,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
                 className="absolute inset-y-0 right-0 w-0.5"
                 style={{ background: target.a2, boxShadow: `0 0 14px ${target.a2}` }}
               />
-            </motion.div>
+            </m.div>
           ))}
         </div>
       )}

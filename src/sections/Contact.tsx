@@ -1,4 +1,4 @@
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { ResumeLink } from '@/components/ResumeLink'
 import { PROFILE } from '@/content/site'
 import { useBurstOnClick } from '@/hooks/useBurstOnClick'
@@ -24,7 +24,7 @@ export function Contact() {
       id="contact"
       className="mx-auto max-w-[1180px] px-[clamp(18px,4vw,40px)] pt-[clamp(76px,11vw,140px)] pb-[clamp(56px,8vw,96px)]"
     >
-      <motion.div
+      <m.div
         {...reveal(blurIn)}
         className="relative overflow-hidden rounded-[26px] border border-line bg-[linear-gradient(160deg,color-mix(in_srgb,var(--pf-a1)_14%,transparent),color-mix(in_srgb,var(--pf-a2)_7%,transparent)_55%,transparent)] p-[clamp(28px,5vw,56px)] backdrop-blur-[20px]"
       >
@@ -81,7 +81,7 @@ export function Contact() {
             ))}
           </dl>
         </div>
-      </motion.div>
+      </m.div>
     </section>
   )
 }

@@ -1,4 +1,4 @@
-import { motion, useScroll } from 'motion/react'
+import { m, useScroll } from 'motion/react'
 import { useRef } from 'react'
 import { Chip } from '@/components/Chip'
 import { SectionHeading } from '@/components/SectionHeading'
@@ -9,7 +9,7 @@ import { cn } from '@/lib/cn'
 
 function RoleCard({ role }: { role: Role }) {
   return (
-    <motion.article
+    <m.article
       variants={dealIn}
       custom={EDGE.left}
       className="relative pl-[clamp(30px,4vw,46px)]"
@@ -58,7 +58,7 @@ function RoleCard({ role }: { role: Role }) {
           ))}
         </div>
       </div>
-    </motion.article>
+    </m.article>
   )
 }
 
@@ -77,13 +77,13 @@ export function Work() {
     >
       <SectionHeading index="01" label="WORK" title="Where I've built." />
 
-      <motion.div
+      <m.div
         ref={timelineRef}
         {...reveal(grid(0.12))}
         className="relative mt-[clamp(34px,5vw,56px)] flex flex-col gap-5"
       >
         <div className="absolute top-2.5 bottom-2.5 left-[7px] w-0.5 rounded-full bg-line">
-          <motion.div
+          <m.div
             style={{ scaleY: scrollYProgress }}
             className={cn(
               'h-full w-full origin-top rounded-full',
@@ -95,7 +95,7 @@ export function Work() {
         {ROLES.map((role) => (
           <RoleCard key={role.company} role={role} />
         ))}
-      </motion.div>
+      </m.div>
     </section>
   )
 }

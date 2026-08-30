@@ -1,4 +1,4 @@
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { BrandIcon } from '@/components/BrandIcon'
 import { Chip } from '@/components/Chip'
 import { SectionHeading } from '@/components/SectionHeading'
@@ -16,12 +16,12 @@ export function Builds() {
     >
       <SectionHeading index="04" label="BUILDS" title="Shipped on my own time." />
 
-      <motion.div
+      <m.div
         {...reveal(grid(0.1))}
         className="mt-[clamp(30px,4.5vw,50px)] grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))]"
       >
         {BUILDS.map(({ name, kicker, summary, stack, href }, i) => (
-          <motion.a
+          <m.a
             key={name}
             href={href}
             target="_blank"
@@ -47,9 +47,9 @@ export function Builds() {
                 <Chip key={item}>{item}</Chip>
               ))}
             </div>
-          </motion.a>
+          </m.a>
         ))}
-      </motion.div>
+      </m.div>
     </section>
   )
 }

@@ -14,7 +14,7 @@ function watchForErrors(page: Page) {
  * rest, since hovering or clicking mid-entrance chases a moving target.
  */
 async function skipIntro(page: Page) {
-  const intro = page.getByText('COLD START')
+  const intro = page.getByText('COLD START', { exact: true })
   // The intro is short enough that it can finish on its own before the click
   // lands on a slower machine; either way we only care that it is gone.
   await intro.click({ timeout: 3000 }).catch(() => {})
@@ -31,7 +31,7 @@ test.describe('page shell', () => {
   test('boots, plays the cold start, then reveals the hero', async ({ page }) => {
     await page.goto('/')
 
-    await expect(page.getByText('COLD START')).toBeVisible()
+    await expect(page.getByText('COLD START', { exact: true })).toBeVisible()
     await expect(page.getByText('ADARSH', { exact: false }).first()).toBeVisible()
 
     await skipIntro(page)
@@ -191,6 +191,26 @@ test.describe('content', () => {
     )
   })
 
+  test('every section heading finishes its reveal', async ({ page }) => {
+    await page.goto('/')
+    await skipIntro(page)
+
+    const headings: [string, string][] = [
+      ['work', "Where I've built."],
+      ['systems', 'The things I keep running.'],
+      ['stack', 'What I reach for.'],
+      ['builds', 'Shipped on my own time.'],
+    ]
+
+    for (const [id, title] of headings) {
+      await primaryNav(page).getByRole('link', { name: id }).click()
+      await expect(page.getByRole('heading', { name: title })).toBeVisible()
+      // A heading masked mid-reveal still reports as visible, so assert the
+      // slide actually landed. This shipped stuck once.
+      await expect(page.locator(`#${id} h2 span`)).toHaveCSS('transform', 'none')
+    }
+  })
+
   test('carries no em dashes', async ({ page }) => {
     await page.goto('/')
     await skipIntro(page)
@@ -236,7 +256,7 @@ test.describe('reduced motion', () => {
   test('skips the cold start and shows the hero immediately', async ({ page }) => {
     await page.goto('/')
 
-    await expect(page.getByText('COLD START')).toBeHidden()
+    await expect(page.getByText('COLD START', { exact: true })).toBeHidden()
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('opacity', '1')
   })

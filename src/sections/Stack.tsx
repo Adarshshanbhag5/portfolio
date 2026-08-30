@@ -1,4 +1,4 @@
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { Chip } from '@/components/Chip'
 import { SectionHeading } from '@/components/SectionHeading'
 import { STACK } from '@/content/stack'
@@ -12,12 +12,12 @@ export function Stack() {
     >
       <SectionHeading index="03" label="STACK" title="What I reach for." />
 
-      <motion.div
+      <m.div
         {...reveal(grid(0.06))}
         className="mt-[clamp(30px,4.5vw,50px)] grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))]"
       >
         {STACK.map(({ title, items }, i) => (
-          <motion.div
+          <m.div
             key={title}
             variants={dealIn}
             custom={i}
@@ -31,9 +31,9 @@ export function Stack() {
                 </Chip>
               ))}
             </div>
-          </motion.div>
+          </m.div>
         ))}
-      </motion.div>
+      </m.div>
     </section>
   )
 }

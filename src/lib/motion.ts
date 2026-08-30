@@ -33,15 +33,19 @@ export const blurIn: Variants = {
 
 export const VIEWPORT = { once: true, amount: 0.25 } as const
 
-/** Headings rise out from behind their own baseline. */
+/**
+ * Headings rise out from behind their own baseline. The masking belongs to an
+ * unclipped parent with `overflow-hidden`: clipping the observed element itself
+ * leaves it with no visible area, so the observer behind `whileInView` never
+ * fires and the reveal deadlocks.
+ */
 export const maskUp: Variants = {
-  hidden: { clipPath: 'inset(0 0 100% 0)', y: 14 },
-  visible: {
-    clipPath: 'inset(0 0 -12% 0)',
-    y: 0,
-    transition: { duration: 0.62, ease: EASE_OUT_EXPO },
-  },
+  hidden: { y: '110%' },
+  visible: { y: 0, transition: { duration: 0.62, ease: EASE_OUT_EXPO } },
 }
+
+/** Parent that only propagates its variant label to children. */
+export const passthrough: Variants = { hidden: {}, visible: {} }
 
 /** Rules draw themselves out from the kicker. */
 export const drawOut: Variants = {

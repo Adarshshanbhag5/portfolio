@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from 'motion/react'
+import { m, useScroll, useTransform } from 'motion/react'
 import type { MotionValue } from 'motion/react'
 import type { ReactNode } from 'react'
 import { useCanvasScene } from '@/hooks/useCanvasScene'
@@ -15,9 +15,9 @@ const glow = (accent: string, strength: number) =>
  */
 function Parallax({ y, children }: { y: MotionValue<number>; children: ReactNode }) {
   return (
-    <motion.div style={{ y }} className="absolute inset-0">
+    <m.div style={{ y }} className="absolute inset-0">
       {children}
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -56,7 +56,7 @@ export function BackgroundField() {
       <canvas ref={meshRef} className="absolute inset-0 size-full opacity-72" />
       <canvas ref={eventLoopRef} className="absolute inset-0 size-full opacity-62" />
 
-      <motion.div
+      <m.div
         style={{
           y: gridY,
           backgroundImage:

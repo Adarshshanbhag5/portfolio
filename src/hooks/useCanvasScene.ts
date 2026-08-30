@@ -58,7 +58,11 @@ export function useCanvasScene<State>(scene: Scene<State>, readouts?: SceneReado
 
     const unsubscribe = subscribeToTicker((dt) => {
       if (!visible || !state) return
-      const surface = fitCanvas(canvas)
+      // Bail before touching the canvas: clearing a full-viewport backing store
+      // for a scene that will decline to draw is pure waste on a phone.
+      if (scene.minWidth && canvas.clientWidth < scene.minWidth) return
+
+      const surface = fitCanvas(canvas, scene.maxDpr)
       if (!surface) return
       const { theme: currentTheme, palette: currentPalette } = latest.current
       scene.draw(state, {

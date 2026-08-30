@@ -13,7 +13,7 @@ export function LiveTape() {
           LTP FEED
         </span>
       </div>
-      <canvas ref={canvasRef} className="block h-11 w-full" />
+      <canvas aria-hidden ref={canvasRef} className="block h-11 w-full" />
     </div>
   )
 }

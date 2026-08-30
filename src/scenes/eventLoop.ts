@@ -65,6 +65,8 @@ const smoothstep = (t: number) => t * t * (3 - 2 * t)
  */
 export const eventLoopScene = defineScene<EventLoopState>({
   alwaysRun: true,
+  minWidth: 560,
+  maxDpr: 1.5,
 
   create: () => ({
     angle: 0,
@@ -77,8 +79,6 @@ export const eventLoopScene = defineScene<EventLoopState>({
   }),
 
   draw(s, { ctx, w, h, dt, palette }) {
-    if (w < 560) return
-
     s.elapsed += dt
     s.angle = (s.angle + dt * 0.62) % TAU
 

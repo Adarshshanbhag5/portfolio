@@ -1,4 +1,4 @@
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { useRef } from 'react'
 import type { ReactNode } from 'react'
 import { BrandIcon } from '@/components/BrandIcon'
@@ -56,7 +56,7 @@ function SystemCard<State>({
   const canvasRef = useCanvasScene(scene, { [readoutKey]: readout })
 
   return (
-    <motion.article
+    <m.article
       variants={dealIn}
       custom={order}
       className="rounded-[20px] border border-line bg-linear-to-b from-[color-mix(in_srgb,var(--pf-txt)_5%,transparent)] to-[color-mix(in_srgb,var(--pf-txt)_1.5%,transparent)] p-5 backdrop-blur-[18px] transition-[border-color,transform] duration-200 hover:-translate-y-[3px] hover:border-line-2"
@@ -72,11 +72,11 @@ function SystemCard<State>({
         </span>
       </div>
 
-      <canvas ref={canvasRef} className="mt-3.5 block h-33 w-full" />
+      <canvas aria-hidden ref={canvasRef} className="mt-3.5 block h-33 w-full" />
 
       <h3 className="mt-3.5 text-[19px] font-semibold">{title}</h3>
       <p className="mt-1.5 text-sm leading-[1.6] text-muted">{children}</p>
-    </motion.article>
+    </m.article>
   )
 }
 
@@ -91,16 +91,16 @@ export function Systems() {
         label="SYSTEMS"
         title="The things I keep running."
         aside={
-          <motion.span
+          <m.span
             {...reveal(riseSmall)}
             className="pb-1.5 font-mono text-[10px] tracking-[0.14em] text-faint"
           >
             SIMULATED · ILLUSTRATIVE ONLY
-          </motion.span>
+          </m.span>
         }
       />
 
-      <motion.div
+      <m.div
         {...reveal(grid())}
         className="mt-[clamp(30px,4.5vw,50px)] grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))]"
       >
@@ -192,7 +192,7 @@ export function Systems() {
           Bulk upserts in the millions, indexes that earn their keep, and a cache in front so the
           client never waits on the DB.
         </SystemCard>
-      </motion.div>
+      </m.div>
     </section>
   )
 }
