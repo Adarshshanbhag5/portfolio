@@ -1,27 +1,15 @@
 import { useCallback, useMemo } from 'react'
+import { useDeploy } from '@/context/deploy-context'
 import { useEffectsLayer } from '@/context/effects-context'
 import { rnd } from '@/lib/random'
 
 /**
- * The two hidden sequences: a clean rolling deploy, and a chaos-monkey run
- * that recovers on its own. Both are pure composition over the effects layer.
+ * The two hidden sequences: a canary rollout, and a chaos-monkey run that
+ * recovers on its own.
  */
 export function useEasterEggs() {
-  const { burst, showToast, shake } = useEffectsLayer()
-
-  const deploy = useCallback(() => {
-    const { innerWidth: w, innerHeight: h } = window
-    burst(w / 2, h * 0.45, 90, 9)
-    shake()
-    showToast(
-      <>
-        <span className="text-a2">●</span> rolling deploy · 3/3 pods healthy · 0 downtime
-      </>,
-      3200,
-    )
-    setTimeout(() => burst(w * 0.25, h * 0.4, 40, 7), 260)
-    setTimeout(() => burst(w * 0.75, h * 0.4, 40, 7), 420)
-  }, [burst, shake, showToast])
+  const { burst, showToast } = useEffectsLayer()
+  const { run: deploy } = useDeploy()
 
   const chaos = useCallback(() => {
     const { innerWidth: w, innerHeight: h } = window

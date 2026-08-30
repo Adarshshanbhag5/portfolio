@@ -22,7 +22,7 @@ export function Chip({ children, logo, mono, tone, size = 'sm' }: ChipProps) {
         size === 'sm' ? 'gap-1.5 px-2.75 py-1.25 text-[10.5px]' : 'gap-1.75 px-3 py-1.5 text-xs',
         tone ? 'text-ink' : 'border-line text-muted',
       )}
-      // Mixed from the live custom property so the tint follows the theme —
+      // Mixed from the live custom property so the tint follows the theme;
       // the design hard-coded dark-theme rgba() here.
       style={
         tone

@@ -64,8 +64,18 @@ its lifecycle: reveals, the intro, the theme wipe, the résumé overlay. Endless
 ambient loops — drifting glows, the tool marquee, blinking status dots — are CSS
 keyframes, which cost nothing to run.
 
+**Hidden interactions.** The "deploy to prod" button (or typing `ship`) runs a
+canary rollout console: pipeline stages, a fleet flipping version by version,
+and traffic widening from 5% to 100%. Typing `kafka`, or triple-clicking the
+wordmark, releases a chaos monkey that recovers on its own.
+
+**Selection.** Selection highlights are off across the page because they fight
+the animation. Anything a visitor may need to copy opts back in with
+`data-selectable` — today the contact details and the email button.
+
 **Reduced motion.** `prefers-reduced-motion` skips the intro, stops every canvas
-scene, disables the wipe and the résumé overlay, and drops the text effects.
+scene, swaps the theme instantly, and drops the rollout console, the résumé
+overlay and the text effects.
 
 ## Deployment
 

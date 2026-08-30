@@ -19,12 +19,12 @@ export const ROLES: Role[] = [
   {
     company: 'Keenai Global',
     title: 'software engineer, backend',
-    period: 'AUG 2025 — PRESENT',
+    period: 'AUG 2025 - PRESENT',
     tags: ['WEALTH MANAGEMENT · FINTECH'],
     current: true,
     points: [
       <>
-        Own the backend behind a wealth platform's web and mobile apps — portfolio, market data and
+        Own the backend behind a wealth platform's web and mobile apps: portfolio, market data and
         order placement.
       </>,
       <>
@@ -39,7 +39,7 @@ export const ROLES: Role[] = [
         workflows.
       </>,
       <>
-        Shipped self-serve onboarding end to end — drop-off down{' '}
+        Shipped self-serve onboarding end to end. Drop-off down{' '}
         <Mark>
           <CountUp to={95} suffix="%" />
         </Mark>
@@ -68,7 +68,7 @@ export const ROLES: Role[] = [
   {
     company: 'Rattle Software',
     title: 'software development engineer',
-    period: 'JAN 2024 — AUG 2025',
+    period: 'JAN 2024 - AUG 2025',
     tags: ['B2B SAAS'],
     points: [
       <>
@@ -79,7 +79,7 @@ export const ROLES: Role[] = [
         and $4M ARR.
       </>,
       <>
-        Architected a CRM-agnostic sync engine on Temporal.io — sharded workflows, idempotent
+        Architected a CRM-agnostic sync engine on Temporal.io: sharded workflows, idempotent
         retries, ~3M records per job.
       </>,
       <>

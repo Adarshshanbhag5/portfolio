@@ -4,7 +4,7 @@ import { Chip } from '@/components/Chip'
 import { SectionHeading } from '@/components/SectionHeading'
 import { BUILDS } from '@/content/builds'
 import { useBurstOnClick } from '@/hooks/useBurstOnClick'
-import { reveal, rise } from '@/lib/motion'
+import { EDGE, dealIn, grid, reveal } from '@/lib/motion'
 
 export function Builds() {
   const burst = useBurstOnClick()
@@ -16,16 +16,20 @@ export function Builds() {
     >
       <SectionHeading index="04" label="BUILDS" title="Shipped on my own time." />
 
-      <div className="mt-[clamp(30px,4.5vw,50px)] grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))]">
-        {BUILDS.map(({ name, kicker, summary, stack, href }) => (
+      <motion.div
+        {...reveal(grid(0.1))}
+        className="mt-[clamp(30px,4.5vw,50px)] grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))]"
+      >
+        {BUILDS.map(({ name, kicker, summary, stack, href }, i) => (
           <motion.a
             key={name}
             href={href}
             target="_blank"
             rel="noopener"
             onClick={burst}
-            {...reveal(rise)}
-            className="block rounded-[20px] border border-line bg-linear-to-b from-[color-mix(in_srgb,var(--pf-txt)_5%,transparent)] to-[color-mix(in_srgb,var(--pf-txt)_1.5%,transparent)] px-5.5 py-6 text-ink backdrop-blur-[18px] transition-[border-color,transform] duration-300 hover:-translate-y-[3px] hover:border-line-2"
+            variants={dealIn}
+            custom={i === 0 ? EDGE.left : EDGE.right}
+            className="block rounded-[20px] border border-line bg-linear-to-b from-[color-mix(in_srgb,var(--pf-txt)_5%,transparent)] to-[color-mix(in_srgb,var(--pf-txt)_1.5%,transparent)] px-5.5 py-6 text-ink backdrop-blur-[18px] transition-[border-color,transform] duration-200 hover:-translate-y-[3px] hover:border-line-2"
           >
             <div className="flex items-center gap-2.25">
               <BrandIcon slug="react" className="h-4" />
@@ -45,7 +49,7 @@ export function Builds() {
             </div>
           </motion.a>
         ))}
-      </div>
+      </motion.div>
     </section>
   )
 }

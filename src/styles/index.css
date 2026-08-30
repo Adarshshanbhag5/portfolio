@@ -4,7 +4,7 @@
 
 /* ---------------------------------------------------------------------------
    Palette. Both themes are declared in CSS so a theme switch is one attribute
-   flip on <html> — no per-property JS writes, no flash between them. Canvas
+   flip on <html>, with no per-property JS writes, no flash between them. Canvas
    scenes read the matching values from lib/theme.ts, since a 2D context cannot
    consume custom properties.
    --------------------------------------------------------------------------- */
@@ -81,6 +81,12 @@
   }
 
   body {
+    /* Selection highlights fight the animation everywhere on this page. The
+       exception is anything a visitor may actually need to copy, which opts
+       back in with `data-selectable`. */
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
     overflow-x: hidden;
     background: var(--pf-bg);
     color: var(--pf-txt);
@@ -94,6 +100,12 @@
   h3,
   h4 {
     letter-spacing: -0.03em;
+  }
+
+  [data-selectable],
+  [data-selectable] * {
+    -webkit-user-select: text;
+    user-select: text;
   }
 
   ::selection {

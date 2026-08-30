@@ -11,11 +11,13 @@ function watchForErrors(page: Page) {
 
 /**
  * Clicks through the cold-start overlay and waits for the hero to come to
- * rest — hovering or clicking mid-entrance chases a moving target.
+ * rest, since hovering or clicking mid-entrance chases a moving target.
  */
 async function skipIntro(page: Page) {
   const intro = page.getByText('COLD START')
-  await intro.click()
+  // The intro is short enough that it can finish on its own before the click
+  // lands on a slower machine; either way we only care that it is gone.
+  await intro.click({ timeout: 3000 }).catch(() => {})
   await expect(intro).toBeHidden()
 
   const heading = page.getByRole('heading', { level: 1 })
@@ -94,20 +96,25 @@ test.describe('theme', () => {
 })
 
 test.describe('easter eggs', () => {
-  test('the deploy button runs a rolling deploy', async ({ page }) => {
+  test('the deploy button runs a canary rollout to completion', async ({ page }) => {
     await page.goto('/')
     await skipIntro(page)
 
     await page.getByRole('button', { name: /deploy to prod/i }).click()
-    await expect(page.getByRole('status')).toContainText('rolling deploy · 3/3 pods healthy')
+
+    const console_ = page.getByText(/deploy · v\d+/)
+    await expect(console_).toBeVisible()
+    await expect(page.getByText('canary up · shifting 5% of traffic')).toBeVisible()
+    await expect(page.getByText(/promoted · 6\/6 healthy · 0 downtime/)).toBeVisible()
+    await expect(console_).toBeHidden({ timeout: 6000 })
   })
 
-  test('typing "ship" runs the same deploy', async ({ page }) => {
+  test('typing "ship" runs the same rollout', async ({ page }) => {
     await page.goto('/')
     await skipIntro(page)
 
     await page.keyboard.type('ship', { delay: 40 })
-    await expect(page.getByRole('status')).toContainText('rolling deploy')
+    await expect(page.getByText(/deploy · v\d+/)).toBeVisible()
   })
 
   test('three clicks on the wordmark releases the chaos monkey, which recovers', async ({
@@ -117,9 +124,8 @@ test.describe('easter eggs', () => {
     await skipIntro(page)
 
     const brand = primaryNav(page).getByRole('link', { name: /adarsh/i })
-    await brand.click()
-    await brand.click()
-    await brand.click()
+    // One action, so the three clicks cannot drift past the detection window.
+    await brand.click({ clickCount: 3, delay: 60 })
 
     const toast = page.getByRole('status')
     await expect(toast).toContainText('chaos monkey released')
@@ -152,6 +158,59 @@ test.describe('résumé', () => {
     await expect(page.getByText('✓ transfer complete', { exact: false })).toBeVisible()
     await expect(overlay).toBeHidden({ timeout: 6000 })
   })
+
+  test('opens the file only once the overlay has played', async ({ page, context }) => {
+    await page.goto('/')
+    await skipIntro(page)
+
+    const clickedAt = Date.now()
+    const popup = context.waitForEvent('page')
+    await primaryNav(page).getByRole('link', { name: /résumé/i }).click()
+
+    await expect(page.getByText('GET /adarsh-resume.pdf')).toBeVisible()
+    const opened = await popup
+    // The tab must trail the animation, not race it.
+    expect(Date.now() - clickedAt).toBeGreaterThan(700)
+
+    await opened.close()
+  })
+})
+
+test.describe('content', () => {
+  test('project cards link to their own repositories', async ({ page }) => {
+    await page.goto('/')
+    await skipIntro(page)
+
+    await expect(page.getByRole('link', { name: /react-native-palette-picker/ })).toHaveAttribute(
+      'href',
+      'https://github.com/Adarshshanbhag5/react-native-palette-picker',
+    )
+    await expect(page.getByRole('link', { name: /MusicFumes/ })).toHaveAttribute(
+      'href',
+      'https://github.com/Adarshshanbhag5/musicFumes',
+    )
+  })
+
+  test('carries no em dashes', async ({ page }) => {
+    await page.goto('/')
+    await skipIntro(page)
+
+    const withEmDash = await page.evaluate(() =>
+      document.body.innerText
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line.includes('\u2014')),
+    )
+    expect(withEmDash).toEqual([])
+  })
+
+  test('body text is unselectable, contact details are not', async ({ page }) => {
+    await page.goto('/')
+    await skipIntro(page)
+
+    await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('user-select', 'none')
+    await expect(page.locator('[data-selectable]').first()).toHaveCSS('user-select', 'text')
+  })
 })
 
 test.describe('text effects', () => {
@@ -161,7 +220,7 @@ test.describe('text effects', () => {
 
     const words = page.getByRole('heading', { level: 1 }).locator('span').first()
     // Dismissing the overlay leaves the cursor mid-screen, which can already be
-    // inside the target — park it in the corner so the hover is a real entry.
+    // inside the target, so park it in the corner and make the hover a real entry.
     await page.mouse.move(4, 4)
     await expect(words).toHaveText('hold up')
 

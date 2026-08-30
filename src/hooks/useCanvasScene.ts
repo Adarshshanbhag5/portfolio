@@ -13,7 +13,7 @@ export type SceneReadouts = Record<string, RefObject<HTMLElement | null>>
  * Mounts a canvas scene: sizes it to the device pixel ratio, rebuilds its state
  * on resize, pauses it off-screen, and drives it from the shared ticker.
  *
- * Readouts bypass React on purpose — these values change 60 times a second and
+ * Readouts bypass React on purpose: these values change 60 times a second and
  * a re-render per frame would cost far more than one textContent write.
  */
 export function useCanvasScene<State>(scene: Scene<State>, readouts?: SceneReadouts) {

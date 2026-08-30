@@ -1,4 +1,4 @@
-import { motion } from 'motion/react'
+import { motion, useScroll, useTransform } from 'motion/react'
 import { useRef } from 'react'
 import { Chip } from '@/components/Chip'
 import { CountUp } from '@/components/CountUp'
@@ -35,6 +35,15 @@ interface HeroProps {
 }
 
 export function Hero({ introComplete }: HeroProps) {
+  const headerRef = useRef<HTMLElement>(null)
+  // Hand the hero off to the next section rather than letting it scroll away flat.
+  const { scrollYProgress } = useScroll({
+    target: headerRef,
+    offset: ['start start', 'end start'],
+  })
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, -70])
+
   const magnetic = useMagnetic()
   const scrambleRef = useScrambleOnHover<HTMLSpanElement>()
   const burst = useBurstOnClick()
@@ -46,12 +55,14 @@ export function Hero({ introComplete }: HeroProps) {
 
   return (
     <motion.header
+      ref={headerRef}
       id="top"
       initial="hidden"
       animate={introComplete ? 'visible' : 'hidden'}
       {...magnetic.handlers}
       className="mx-auto max-w-[1180px] px-[clamp(18px,4vw,40px)] pt-[clamp(118px,16vh,190px)]"
     >
+      <motion.div style={{ opacity: contentOpacity, y: contentY }}>
       <motion.div
         variants={heroFade}
         className="inline-flex items-center gap-2.25 rounded-full border border-line bg-panel py-1.5 pr-3.25 pl-2.5 backdrop-blur-[12px]"
@@ -65,7 +76,7 @@ export function Hero({ introComplete }: HeroProps) {
       <motion.div style={magnetic.style}>
         <motion.h1
           variants={heroBlur}
-          custom={0.06}
+          custom={0.04}
           className="mt-5.5 text-[clamp(40px,8.6vw,108px)] leading-[0.98] font-bold tracking-[-0.045em]"
         >
           I build backends
@@ -82,10 +93,10 @@ export function Hero({ introComplete }: HeroProps) {
       </motion.div>
 
       <div className="mt-[clamp(30px,4vw,46px)] flex flex-wrap gap-8 gap-x-[clamp(28px,5vw,64px)]">
-        <motion.div variants={heroRise} custom={0.24} className="min-w-0 flex-[1_1_380px]">
+        <motion.div variants={heroRise} custom={0.16} className="min-w-0 flex-[1_1_380px]">
           <p className="max-w-[48ch] text-[clamp(16px,1.55vw,19.5px)] leading-[1.6] text-pretty text-muted">
-            I design and run backend services for financial platforms — market data, order flow,
-            event-driven workflows — in <span className="text-ink">TypeScript</span> and{' '}
+            I design and run backend services for financial platforms. Market data, order flow and
+            event-driven workflows, in <span className="text-ink">TypeScript</span> and{' '}
             <span className="text-ink">Go</span>. Backend-heavy, with enough React and React Native
             to ship the client too.
           </p>
@@ -98,7 +109,7 @@ export function Hero({ introComplete }: HeroProps) {
 
         <motion.div
           variants={heroRise}
-          custom={0.38}
+          custom={0.26}
           className="min-w-60 flex-[0_1_320px] rounded-2xl border border-line bg-panel px-4 pt-3.5 pb-3 backdrop-blur-[16px]"
         >
           <div className="flex items-center justify-between gap-3">
@@ -112,12 +123,12 @@ export function Hero({ introComplete }: HeroProps) {
           <canvas ref={sparkRef} className="mt-2 block h-[62px] w-full" />
           <div className="mt-1.5 flex items-center gap-1.75 font-mono text-[10px] text-faint">
             <span className="animate-blink size-1.5 rounded-full bg-a2 [--blink-duration:1.4s]" />
-            <span ref={p99}>p99 — · 0 dropped</span>
+            <span ref={p99}>p99 0ms · 0 dropped</span>
           </div>
         </motion.div>
       </div>
 
-      <motion.div variants={heroFade} custom={0.5} className="mt-7.5 flex flex-wrap gap-3">
+      <motion.div variants={heroFade} custom={0.35} className="mt-7.5 flex flex-wrap gap-3">
         <a
           href="#work"
           onClick={burst}
@@ -143,7 +154,7 @@ export function Hero({ introComplete }: HeroProps) {
 
       <motion.div
         variants={heroFade}
-        custom={0.62}
+        custom={0.44}
         className="mt-[clamp(40px,5.5vw,68px)] grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr))]"
       >
         {STATS.map(({ value, suffix, unit, label }) => (
@@ -161,6 +172,7 @@ export function Hero({ introComplete }: HeroProps) {
             </div>
           </div>
         ))}
+      </motion.div>
       </motion.div>
     </motion.header>
   )

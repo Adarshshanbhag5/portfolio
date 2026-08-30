@@ -45,7 +45,7 @@ export const kafkaScene = defineScene<KafkaState>({
     partitions.forEach((p, i) => {
       p.produced += p.produceRate * dt
 
-      // Consumers speed up as lag grows — that feedback is the whole metric.
+      // Consumers speed up as lag grows. That feedback is the whole metric.
       let lag = Math.max(0, p.produced - p.consumed)
       const effective = p.consumeRate * (0.7 + Math.min(2.8, lag / 38))
       p.consumed = Math.min(p.produced, p.consumed + effective * dt)

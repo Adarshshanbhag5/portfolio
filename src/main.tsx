@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from '@/App'
+import { DeployProvider } from '@/context/deploy'
 import { DownloadProvider } from '@/context/download'
 import { EffectsProvider } from '@/context/effects'
 import { ThemeProvider } from '@/context/theme'
@@ -16,7 +17,9 @@ createRoot(container).render(
     <EffectsProvider>
       <ThemeProvider>
         <DownloadProvider>
-          <App />
+          <DeployProvider>
+            <App />
+          </DeployProvider>
         </DownloadProvider>
       </ThemeProvider>
     </EffectsProvider>

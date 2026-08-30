@@ -7,18 +7,21 @@ import { useEffectsLayer } from '@/context/effects-context'
 
 const TOTAL_KB = 248
 const CHUNKS = 14
-const DURATION = 2.2
+const DURATION = 1.05
 
 /** Slow to first byte, then the stream opens up. */
 const transferCurve = (t: number) => Math.min(1, t < 0.32 ? t * 0.55 : 0.176 + (t - 0.32) * 1.21)
 
 const LOG: readonly (readonly [number, string])[] = [
   [0, '↳ dns · adarsh.dev resolved'],
-  [340, '↳ tls handshake · h2 · aes-256-gcm'],
-  [700, '↳ 200 OK  application/pdf  cache: MISS'],
-  [1450, '↳ streaming 14 chunks from object store …'],
-  [2300, '✓ transfer complete · 248 KB in 1.9s'],
+  [150, '↳ tls handshake · h2 · aes-256-gcm'],
+  [320, '↳ 200 OK  application/pdf  cache: MISS'],
+  [620, '↳ streaming 14 chunks from object store …'],
+  [1010, '✓ transfer complete · 248 KB in 1.0s'],
 ]
+
+/** Held open just long enough to read the last line. */
+const LINGER_MS = 380
 
 function Chunk({ index, progress }: { index: number; progress: MotionValue<number> }) {
   const filled = useTransform(progress, (v) => Math.floor(v * CHUNKS) > index)
@@ -52,7 +55,7 @@ export function DownloadProvider({ children }: { children: ReactNode }) {
   useEffect(() => clearTimers, [clearTimers])
 
   const play = useCallback(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return Promise.resolve()
 
     clearTimers()
     setLog([])
@@ -63,12 +66,11 @@ export function DownloadProvider({ children }: { children: ReactNode }) {
     LOG.forEach(([at, line]) => {
       timers.current.push(window.setTimeout(() => setLog((rows) => [...rows, line]), at))
     })
-    timers.current.push(window.setTimeout(() => setStatus('200 OK'), 700))
+    timers.current.push(window.setTimeout(() => setStatus('200 OK'), 320))
 
-    const controls = animate(progress, 1, { duration: DURATION, ease: transferCurve })
-    void controls.finished.then(() => {
+    return animate(progress, 1, { duration: DURATION, ease: transferCurve }).finished.then(() => {
       burst(window.innerWidth / 2, window.innerHeight / 2, 54, 8)
-      timers.current.push(window.setTimeout(() => setOpen(false), 900))
+      timers.current.push(window.setTimeout(() => setOpen(false), LINGER_MS))
     })
   }, [burst, clearTimers, progress])
 
@@ -92,7 +94,7 @@ export function DownloadProvider({ children }: { children: ReactNode }) {
             <motion.div
               initial={{ opacity: 0, y: 16, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
               className="w-[min(470px,100%)] rounded-[18px] border border-[rgb(255_255_255/0.14)] bg-[rgb(11_13_20/0.93)] p-5.5 font-mono text-xs text-[#e9ecf5] shadow-[0_26px_70px_-22px_rgb(0_0_0/0.92)]"
             >
               <div className="flex items-center gap-2.25">
@@ -132,7 +134,7 @@ export function DownloadProvider({ children }: { children: ReactNode }) {
                       key={line}
                       initial={{ opacity: 0, x: -12 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
                       className={line.startsWith('✓') ? 'text-[#4be3c1]' : undefined}
                     >
                       {line}

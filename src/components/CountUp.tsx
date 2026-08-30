@@ -2,7 +2,7 @@ import { animate, useInView, useMotionValue, useReducedMotion, useTransform } fr
 import { motion } from 'motion/react'
 import { useEffect, useRef } from 'react'
 
-const DURATION = 1.1
+const DURATION = 0.85
 
 interface CountUpProps {
   to: number

@@ -1,7 +1,7 @@
 import { motion, useMotionValue, useSpring } from 'motion/react'
 import { useEffect, useState } from 'react'
 
-const RING_SPRING = { stiffness: 420, damping: 34, mass: 0.5 }
+const RING_SPRING = { stiffness: 620, damping: 38, mass: 0.4 }
 /** Elements the ring opens up over. */
 const INTERACTIVE = 'a, button, [data-scramble]'
 
@@ -41,7 +41,7 @@ export function PointerRing() {
           height: hot ? 48 : 30,
           backgroundColor: hot ? 'color-mix(in srgb, var(--pf-a2) 10%, transparent)' : 'transparent',
         }}
-        transition={{ duration: 0.22 }}
+        transition={{ duration: 0.15 }}
         className="pointer-events-none fixed top-0 left-0 z-[91] -translate-x-1/2 -translate-y-1/2 rounded-full border border-a2"
       />
       <motion.div

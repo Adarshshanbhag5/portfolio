@@ -46,6 +46,7 @@ export function Contact() {
             <a
               href={`mailto:${PROFILE.email}`}
               onClick={burst}
+              data-selectable
               className={`${PILL} bg-linear-to-b from-[#b7f5e6] to-a2 text-[#07080c] shadow-[0_12px_34px_-12px_rgb(75_227_193/0.85)] hover:-translate-y-px hover:brightness-108`}
             >
               {PROFILE.email}
@@ -57,7 +58,9 @@ export function Contact() {
             </ResumeLink>
           </div>
 
-          <dl className="mt-8.5 grid gap-3.5 border-t border-line pt-6.5 [grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))]">
+          <dl
+            data-selectable
+            className="mt-8.5 grid gap-3.5 border-t border-line pt-6.5 [grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))]">
             {DETAILS.map(({ label, value, href, external }) => (
               <div key={label}>
                 <dt className="font-mono text-[10px] tracking-[0.16em] text-faint">{label}</dt>

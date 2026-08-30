@@ -1,6 +1,6 @@
 export interface Surface {
   ctx: CanvasRenderingContext2D
-  /** CSS pixels, not device pixels — draw in these. */
+  /** CSS pixels, not device pixels. Draw in these. */
   w: number
   h: number
 }
@@ -31,5 +31,5 @@ export function fitCanvas(el: HTMLCanvasElement): Surface | null {
 
 export const MONO_FONT = '"JetBrains Mono Variable", ui-monospace, monospace'
 
-/** `500 9px "JetBrains Mono Variable", …` — the scenes' only text style. */
+/** The scenes' only text style, e.g. `500 9px "JetBrains Mono Variable"`. */
 export const monoFont = (px: number) => `500 ${px}px ${MONO_FONT}`

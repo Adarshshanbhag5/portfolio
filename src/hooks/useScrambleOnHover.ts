@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'motion/react'
 
 const GLYPHS = '01<>/[]{}=+*-~$#%'
-const DURATION = 1250
-const REPAINT_MS = 62
+const DURATION = 700
+const REPAINT_MS = 45
 /** Letters resolve left to right, slowly at first. */
 const RESOLVE_CURVE = 2.3
 

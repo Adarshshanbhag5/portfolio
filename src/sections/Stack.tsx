@@ -2,7 +2,7 @@ import { motion } from 'motion/react'
 import { Chip } from '@/components/Chip'
 import { SectionHeading } from '@/components/SectionHeading'
 import { STACK } from '@/content/stack'
-import { reveal, riseSmall } from '@/lib/motion'
+import { dealIn, grid, reveal } from '@/lib/motion'
 
 export function Stack() {
   return (
@@ -12,11 +12,15 @@ export function Stack() {
     >
       <SectionHeading index="03" label="STACK" title="What I reach for." />
 
-      <div className="mt-[clamp(30px,4.5vw,50px)] grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))]">
-        {STACK.map(({ title, items }) => (
+      <motion.div
+        {...reveal(grid(0.06))}
+        className="mt-[clamp(30px,4.5vw,50px)] grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))]"
+      >
+        {STACK.map(({ title, items }, i) => (
           <motion.div
             key={title}
-            {...reveal(riseSmall)}
+            variants={dealIn}
+            custom={i}
             className="rounded-[18px] border border-line bg-panel p-5 backdrop-blur-[16px]"
           >
             <h3 className="font-mono text-[10.5px] tracking-[0.16em] text-a1">{title}</h3>
@@ -29,7 +33,7 @@ export function Stack() {
             </div>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   )
 }

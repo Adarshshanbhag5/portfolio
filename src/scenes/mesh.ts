@@ -15,6 +15,8 @@ interface Node {
   vy: number
   r: number
   label: string
+  /** Decays from 1 after a packet lands here. */
+  pulse: number
 }
 
 interface Packet {
@@ -44,6 +46,7 @@ export const meshScene = defineScene<MeshState>({
       vy: rnd(-0.08, 0.08),
       r: rnd(2.2, 3.8),
       label: SERVICES[i % SERVICES.length],
+      pulse: 0,
     }))
     const packets = Array.from({ length: Math.min(8, count) }, (_, i) => ({
       from: i % count,
@@ -80,20 +83,30 @@ export const meshScene = defineScene<MeshState>({
 
     ctx.font = monoFont(9.5)
     for (const node of nodes) {
-      ctx.fillStyle = inkAlpha(palette, 0.5)
+      if (node.pulse > 0) {
+        node.pulse = Math.max(0, node.pulse - dt * 1.6)
+        // Ring expands and fades as the delivery settles.
+        ctx.strokeStyle = palette.a2
+        ctx.globalAlpha = node.pulse * 0.55
+        ctx.lineWidth = 1.2
+        ctx.beginPath()
+        ctx.arc(node.x, node.y, node.r + (1 - node.pulse) * 14, 0, Math.PI * 2)
+        ctx.stroke()
+        ctx.globalAlpha = 1
+      }
+
+      ctx.fillStyle = node.pulse > 0 ? palette.a2 : inkAlpha(palette, 0.5)
       ctx.beginPath()
-      ctx.arc(node.x, node.y, node.r, 0, Math.PI * 2)
+      ctx.arc(node.x, node.y, node.r + node.pulse * 1.2, 0, Math.PI * 2)
       ctx.fill()
       ctx.fillStyle = inkAlpha(palette, 0.28)
       ctx.fillText(node.label, node.x + 9, node.y + 3.5)
     }
 
-    ctx.fillStyle = palette.a2
-    ctx.shadowColor = palette.a2
-    ctx.shadowBlur = 10
     for (const packet of packets) {
       packet.t += packet.speed * step
       if (packet.t > 1) {
+        nodes[packet.to % nodes.length].pulse = 1
         packet.t = 0
         packet.from = Math.floor(Math.random() * nodes.length)
         packet.to = Math.floor(Math.random() * nodes.length)
@@ -101,10 +114,27 @@ export const meshScene = defineScene<MeshState>({
       const a = nodes[packet.from]
       const b = nodes[packet.to]
       if (!a || !b) continue
+
+      const x = a.x + (b.x - a.x) * packet.t
+      const y = a.y + (b.y - a.y) * packet.t
+      const trail = Math.max(0, packet.t - 0.06)
+
+      ctx.strokeStyle = palette.a2
+      ctx.globalAlpha = 0.4
+      ctx.lineWidth = 1.4
       ctx.beginPath()
-      ctx.arc(a.x + (b.x - a.x) * packet.t, a.y + (b.y - a.y) * packet.t, 2.1, 0, Math.PI * 2)
+      ctx.moveTo(a.x + (b.x - a.x) * trail, a.y + (b.y - a.y) * trail)
+      ctx.lineTo(x, y)
+      ctx.stroke()
+      ctx.globalAlpha = 1
+
+      ctx.fillStyle = palette.a2
+      ctx.shadowColor = palette.a2
+      ctx.shadowBlur = 10
+      ctx.beginPath()
+      ctx.arc(x, y, 2.1, 0, Math.PI * 2)
       ctx.fill()
+      ctx.shadowBlur = 0
     }
-    ctx.shadowBlur = 0
   },
 })

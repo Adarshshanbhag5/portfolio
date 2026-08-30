@@ -10,8 +10,8 @@ const SYMBOLS = [
 ] as const
 
 const GAP = 34
-const FLASH_FRAMES = 26
-const SCROLL_PX_PER_SEC = 0.62 * 60
+const FLASH_FRAMES = 22
+const SCROLL_PX_PER_SEC = 92
 
 interface Quote {
   symbol: string
@@ -45,10 +45,10 @@ export const tapeScene = defineScene<TapeState>({
 
     for (const quote of s.quotes) {
       quote.age += step
-      if (quote.age > rnd(70, 150)) {
+      if (quote.age > rnd(26, 72)) {
         quote.age = 0
         quote.previous = quote.price
-        quote.price = Math.max(1, quote.price * (1 + rnd(-0.004, 0.004)))
+        quote.price = Math.max(1, quote.price * (1 + rnd(-0.0055, 0.0055)))
         quote.flash = FLASH_FRAMES
       }
       if (quote.flash > 0) quote.flash -= step
