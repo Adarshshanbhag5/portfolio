@@ -1,4 +1,4 @@
-import { AnimatePresence, animate, motion } from 'motion/react'
+import { AnimatePresence, animate, m } from 'motion/react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { EffectsContext } from '@/context/effects-context'
@@ -76,7 +76,7 @@ export function EffectsProvider({ children }: { children: ReactNode }) {
       >
         <AnimatePresence mode="wait">
           {toast && (
-            <motion.span
+            <m.span
               key={toast.id}
               initial={{ opacity: 0, y: 16, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -85,7 +85,7 @@ export function EffectsProvider({ children }: { children: ReactNode }) {
               className="flex items-center gap-2.5 rounded-full border border-line bg-bg-2/90 px-4.5 py-3 font-mono text-xs whitespace-nowrap text-ink shadow-[0_18px_50px_-18px_rgb(0_0_0/0.9)] backdrop-blur-xl"
             >
               {toast.content}
-            </motion.span>
+            </m.span>
           )}
         </AnimatePresence>
       </output>

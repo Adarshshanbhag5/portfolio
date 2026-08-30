@@ -36,6 +36,7 @@ const nodeCount = (w: number) => (w < 640 ? 8 : w < 1100 ? 11 : SERVICES.length)
 /** The drifting service graph behind the whole page. */
 export const meshScene = defineScene<MeshState>({
   alwaysRun: true,
+  maxDpr: 1.5,
 
   create(w, h) {
     const count = nodeCount(w)

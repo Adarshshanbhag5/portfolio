@@ -1,4 +1,4 @@
-import { AnimatePresence, animate, motion, useMotionValue, useTransform } from 'motion/react'
+import { AnimatePresence, animate, m, useMotionValue, useTransform } from 'motion/react'
 import { useEffect, useState } from 'react'
 import { BOOT_LOG, PROFILE } from '@/content/site'
 
@@ -14,14 +14,14 @@ const LAST = 'SHANBHAG'
 
 function NameChar({ char, delay, className }: { char: string; delay: number; className: string }) {
   return (
-    <motion.span
+    <m.span
       initial={{ opacity: 0, y: 40, rotate: 6 }}
       animate={{ opacity: 1, y: 0, rotate: 0 }}
       transition={{ duration: 0.38, delay, ease: EASE }}
       className={className}
     >
       {char}
-    </motion.span>
+    </m.span>
   )
 }
 
@@ -47,6 +47,16 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
     }
   }, [percent])
 
+  // The overlay is dismissible by pointer; give the keyboard the same exit.
+  useEffect(() => {
+    if (!visible) return
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') setVisible(false)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [visible])
+
   // Nothing behind the overlay should scroll while it is up.
   useEffect(() => {
     document.body.style.overflow = visible ? 'hidden' : ''
@@ -58,15 +68,16 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
   return (
     <AnimatePresence onExitComplete={onDone}>
       {visible && (
-        <motion.div
+        <m.div
           initial={{ clipPath: 'inset(0 0 0 0)' }}
           exit={{ clipPath: 'inset(0 0 100% 0)' }}
           transition={{ duration: 0.34, ease: [0.7, 0, 0.2, 1] }}
           onClick={() => setVisible(false)}
-          role="presentation"
+          // Pure theatre: the real page is already behind it in the a11y tree.
+          aria-hidden
           className="fixed inset-0 z-[95] flex cursor-pointer items-center justify-center overflow-hidden bg-[rgb(7_8_12/0.94)] p-6 backdrop-blur-lg"
         >
-          <motion.div
+          <m.div
             initial={{ opacity: 0, filter: 'blur(14px)', y: 20, scale: 0.98 }}
             animate={
               cardGone
@@ -81,9 +92,9 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
               <span className="font-mono text-[11px] tracking-[0.18em] text-[rgb(233_236_245/0.6)]">
                 COLD START
               </span>
-              <motion.span className="ml-auto font-mono text-[11px] tracking-[0.14em] text-[#7c9cff]">
+              <m.span className="ml-auto font-mono text-[11px] tracking-[0.14em] text-[#7c9cff]">
                 {label}
-              </motion.span>
+              </m.span>
             </div>
 
             <div className="mt-4.5 text-[clamp(26px,5.4vw,40px)] leading-[1.02] font-bold tracking-[-0.04em]">
@@ -94,7 +105,7 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
             </div>
 
             <div className="mt-4.5 h-[3px] overflow-hidden rounded-full bg-[rgb(255_255_255/0.1)]">
-              <motion.div
+              <m.div
                 style={{ width: barWidth }}
                 className="h-full rounded-full bg-linear-to-r from-[#7c9cff] to-[#4be3c1] shadow-[0_0_14px_rgb(124_156_255/0.7)]"
               />
@@ -102,7 +113,7 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
 
             <ul className="mt-4 flex flex-col gap-1.25 font-mono text-[11px] text-[rgb(233_236_245/0.42)]">
               {BOOT_LOG.map(([line, status], i) => (
-                <motion.li
+                <m.li
                   key={line}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -110,14 +121,14 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
                 >
                   {line}
                   <span className="text-[#4be3c1]"> {status}</span>
-                </motion.li>
+                </m.li>
               ))}
             </ul>
 
             <div className="mt-4.5 font-mono text-[10px] tracking-[0.16em] text-[rgb(233_236_245/0.34)]">
-              CLICK TO SKIP
+              CLICK OR ESC TO SKIP
             </div>
-          </motion.div>
+          </m.div>
 
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2.5 px-[4vw]">
             <div className="text-center text-[clamp(38px,11.5vw,158px)] leading-[0.86] font-bold tracking-[-0.055em]">
@@ -142,16 +153,16 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
                 ))}
               </div>
             </div>
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.34, delay: 1.38, ease: EASE }}
               className="font-mono text-[clamp(9px,1.2vw,12px)] tracking-[0.3em] text-[rgb(233_236_245/0.5)]"
             >
               BACKEND · DISTRIBUTED SYSTEMS · FINTECH
-            </motion.div>
+            </m.div>
           </div>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   )

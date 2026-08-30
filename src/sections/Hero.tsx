@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from 'motion/react'
+import { m, useScroll, useTransform } from 'motion/react'
 import { useRef } from 'react'
 import { Chip } from '@/components/Chip'
 import { CountUp } from '@/components/CountUp'
@@ -54,7 +54,7 @@ export function Hero({ introComplete }: HeroProps) {
   const sparkRef = useCanvasScene(throughputScene, { rps, p99 })
 
   return (
-    <motion.header
+    <m.header
       ref={headerRef}
       id="top"
       initial="hidden"
@@ -62,8 +62,8 @@ export function Hero({ introComplete }: HeroProps) {
       {...magnetic.handlers}
       className="mx-auto max-w-[1180px] px-[clamp(18px,4vw,40px)] pt-[clamp(118px,16vh,190px)]"
     >
-      <motion.div style={{ opacity: contentOpacity, y: contentY }}>
-      <motion.div
+      <m.div style={{ opacity: contentOpacity, y: contentY }}>
+      <m.div
         variants={heroFade}
         className="inline-flex items-center gap-2.25 rounded-full border border-line bg-panel py-1.5 pr-3.25 pl-2.5 backdrop-blur-[12px]"
       >
@@ -71,10 +71,10 @@ export function Hero({ introComplete }: HeroProps) {
         <span className="font-mono text-[11px] tracking-[0.1em] text-muted">
           open to backend engineering opportunities
         </span>
-      </motion.div>
+      </m.div>
 
-      <motion.div style={magnetic.style}>
-        <motion.h1
+      <m.div style={magnetic.style}>
+        <m.h1
           variants={heroBlur}
           custom={0.04}
           className="mt-5.5 text-[clamp(40px,8.6vw,108px)] leading-[0.98] font-bold tracking-[-0.045em]"
@@ -89,11 +89,11 @@ export function Hero({ introComplete }: HeroProps) {
             hold up
           </span>{' '}
           under load.
-        </motion.h1>
-      </motion.div>
+        </m.h1>
+      </m.div>
 
       <div className="mt-[clamp(30px,4vw,46px)] flex flex-wrap gap-8 gap-x-[clamp(28px,5vw,64px)]">
-        <motion.div variants={heroRise} custom={0.16} className="min-w-0 flex-[1_1_380px]">
+        <m.div variants={heroRise} custom={0.16} className="min-w-0 flex-[1_1_380px]">
           <p className="max-w-[48ch] text-[clamp(16px,1.55vw,19.5px)] leading-[1.6] text-pretty text-muted">
             I design and run backend services for financial platforms. Market data, order flow and
             event-driven workflows, in <span className="text-ink">TypeScript</span> and{' '}
@@ -105,9 +105,9 @@ export function Hero({ introComplete }: HeroProps) {
               <Chip key={tag}>{tag}</Chip>
             ))}
           </div>
-        </motion.div>
+        </m.div>
 
-        <motion.div
+        <m.div
           variants={heroRise}
           custom={0.26}
           className="min-w-60 flex-[0_1_320px] rounded-2xl border border-line bg-panel px-4 pt-3.5 pb-3 backdrop-blur-[16px]"
@@ -120,15 +120,15 @@ export function Hero({ introComplete }: HeroProps) {
               0 req/s
             </span>
           </div>
-          <canvas ref={sparkRef} className="mt-2 block h-[62px] w-full" />
+          <canvas aria-hidden ref={sparkRef} className="mt-2 block h-[62px] w-full" />
           <div className="mt-1.5 flex items-center gap-1.75 font-mono text-[10px] text-faint">
             <span className="animate-blink size-1.5 rounded-full bg-a2 [--blink-duration:1.4s]" />
             <span ref={p99}>p99 0ms · 0 dropped</span>
           </div>
-        </motion.div>
+        </m.div>
       </div>
 
-      <motion.div variants={heroFade} custom={0.35} className="mt-7.5 flex flex-wrap gap-3">
+      <m.div variants={heroFade} custom={0.35} className="mt-7.5 flex flex-wrap gap-3">
         <a
           href="#work"
           onClick={burst}
@@ -150,9 +150,9 @@ export function Hero({ introComplete }: HeroProps) {
         >
           deploy to prod ⏎
         </button>
-      </motion.div>
+      </m.div>
 
-      <motion.div
+      <m.div
         variants={heroFade}
         custom={0.44}
         className="mt-[clamp(40px,5.5vw,68px)] grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr))]"
@@ -172,8 +172,8 @@ export function Hero({ introComplete }: HeroProps) {
             </div>
           </div>
         ))}
-      </motion.div>
-      </motion.div>
-    </motion.header>
+      </m.div>
+      </m.div>
+    </m.header>
   )
 }

@@ -24,6 +24,14 @@ export interface Scene<State> {
    * need this; everything else pauses when scrolled away.
    */
   alwaysRun?: boolean
+  /** Below this CSS width the scene is skipped outright, canvas untouched. */
+  minWidth?: number
+  /**
+   * Ceiling on the device pixel ratio. Ambient full-viewport art does not need
+   * a retina backing store, and paying for one is the single largest per-frame
+   * cost on a phone.
+   */
+  maxDpr?: number
 }
 
 /** Keeps each scene module's state type inferred without an explicit generic. */

@@ -9,11 +9,11 @@ export interface Surface {
  * Size the backing store to the device pixel ratio, scale the context to match,
  * and hand back a cleared surface measured in CSS pixels.
  */
-export function fitCanvas(el: HTMLCanvasElement): Surface | null {
+export function fitCanvas(el: HTMLCanvasElement, maxDpr = 2): Surface | null {
   const ctx = el.getContext('2d')
   if (!ctx) return null
 
-  const dpr = Math.min(2, window.devicePixelRatio || 1)
+  const dpr = Math.min(maxDpr, window.devicePixelRatio || 1)
   const w = el.clientWidth
   const h = el.clientHeight
   const bw = Math.round(w * dpr)

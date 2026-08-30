@@ -24,26 +24,43 @@ export const ROLES: Role[] = [
     current: true,
     points: [
       <>
-        Own the backend behind a wealth platform's web and mobile apps: portfolio, market data and
-        order placement.
+        Own Wealth-Core, the service behind the client web and mobile apps for HNI and UHNI
+        investors: portfolio, holdings, market data and order placement across{' '}
+        <Mark>
+          <CountUp to={6} /> asset classes
+        </Mark>
+        , from API design through production support.
       </>,
       <>
-        Built real-time pricing and instrument data across{' '}
+        Built the instrument universe and real-time pricing across{' '}
         <Mark>
           <CountUp to={18} /> global exchanges
-        </Mark>
-        .
+        </Mark>{' '}
+        in the US, Europe and Singapore, reconciling every venue's symbology and trading calendar
+        from LSEG into one internal contract.
       </>,
       <>
-        Automated options order flow over the <Mark>FIX protocol</Mark> on durable Temporal.io
-        workflows.
+        Market-data ingestion runs on <Mark>Temporal.io</Mark>: scheduled fan-out workflows keep
+        option chains, equity fundamentals and company financials current, and durable retries
+        absorb vendor outages instead of leaving holes in the data.
       </>,
       <>
-        Shipped self-serve onboarding end to end. Drop-off down{' '}
+        Own the order management service for US equity options, routing to BNY Pershing over the{' '}
+        <Mark>FIX protocol</Mark> and orchestrating the full order lifecycle as workflows. It
+        replaced manual entry at the dealer desk.
+      </>,
+      <>
+        Shipped self-serve KYC onboarding end to end, the platform's highest-throughput flow, with
+        Singpass identity checks and DocuSign signatures. Drop-off fell{' '}
         <Mark>
           <CountUp to={95} suffix="%" />
-        </Mark>
-        .
+        </Mark>{' '}
+        and opening an account went from 15 days to 2.
+      </>,
+      <>
+        Keep the async stack running: Kafka on AWS MSK for product analytics, EventBridge and SQS
+        consumers for portfolio sync, and an in-house JWT session service that replaced Lambda and
+        Cognito along with their cold starts.
       </>,
     ],
     stack: [
@@ -72,24 +89,42 @@ export const ROLES: Role[] = [
     tags: ['B2B SAAS'],
     points: [
       <>
-        Owned half of a core codebase serving{' '}
+        Owned half of a core product codebase serving{' '}
         <Mark>
           <CountUp to={50} suffix="K" /> daily users
         </Mark>{' '}
-        and $4M ARR.
+        and $4M in annual recurring revenue, cutting churn <Mark>90%</Mark> through feature
+        delivery, critical bug work and sitting directly with the customer-facing teams.
       </>,
       <>
-        Architected a CRM-agnostic sync engine on Temporal.io: sharded workflows, idempotent
-        retries, ~3M records per job.
+        Architected No-Flow, a CRM-agnostic rules engine on <Mark>Temporal.io</Mark> that syncs
+        incrementally every five minutes and removes any dependency on native CRM automation.
       </>,
       <>
-        Built a sandbox-to-production migration tool that lifted retention{' '}
+        Scaled it with sharded workflows, idempotent retries and tuned PostgreSQL bulk upserts to
+        roughly{' '}
+        <Mark>
+          <CountUp to={3} suffix="M" /> records per job
+        </Mark>
+        .
+      </>,
+      <>
+        Built sandbox-to-production migration so customers could validate configuration and promote
+        it in a single step, replacing an error-prone manual process and lifting retention{' '}
         <Mark>
           <CountUp to={60} suffix="%" />
         </Mark>
         .
       </>,
-      <>Cleared every VA/PT finding for SOC 2 across two audit cycles.</>,
+      <>
+        Owned Meeting-DM: Slack notifications enriched with Salesforce context around scheduled
+        meetings, driven by Temporal cron workflows polling Google Calendar, so reps could log calls
+        without leaving Slack.
+      </>,
+      <>
+        Cleared every VA/PT finding for the annual <Mark>SOC 2</Mark> audit across two consecutive
+        cycles.
+      </>,
     ],
     stack: [
       { children: 'TypeScript', logo: 'typescript' },

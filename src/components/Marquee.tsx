@@ -12,7 +12,7 @@ function Track({ items }: { items: readonly MarqueeItem[] }) {
       {items.map(({ label, logo, mono }) => (
         <span
           key={label}
-          className="inline-flex flex-none items-center gap-2 rounded-full border border-line bg-panel px-3.5 py-2 font-mono text-[11.5px] tracking-[0.02em] whitespace-nowrap text-muted backdrop-blur-[10px] transition-[color,border-color,transform] duration-250 hover:-translate-y-0.5 hover:border-line-2 hover:text-ink"
+          className="inline-flex flex-none items-center gap-2 rounded-full border border-line bg-panel px-3.5 py-2 font-mono text-[11.5px] tracking-[0.02em] whitespace-nowrap text-muted transition-[color,border-color,transform] duration-250 hover:-translate-y-0.5 hover:border-line-2 hover:text-ink"
         >
           {logo && <BrandIcon slug={logo} mono={mono} className="h-3.5" />}
           {label}

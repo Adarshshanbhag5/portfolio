@@ -1,5 +1,5 @@
 import { animate, useInView, useMotionValue, useReducedMotion, useTransform } from 'motion/react'
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { useEffect, useRef } from 'react'
 
 const DURATION = 0.85
@@ -26,5 +26,5 @@ export function CountUp({ to, suffix = '' }: CountUpProps) {
     return () => controls.stop()
   }, [count, inView, reducedMotion, to])
 
-  return <motion.span ref={ref}>{label}</motion.span>
+  return <m.span ref={ref}>{label}</m.span>
 }
